@@ -1,0 +1,6 @@
+@JkSamachar_HostAddress = http://localhost:5155
+
+GET {{JkSamachar_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
