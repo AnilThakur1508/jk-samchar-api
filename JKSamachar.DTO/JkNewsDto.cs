@@ -8,6 +8,7 @@ namespace JKSamachar.DTO
 {
     public class JkNewsDto
     {
+        public string? Role { get; set; }
         public string? Title { get; set; }
         public string? Description { get; set; }
         public string? ImageUrl { get; set; }

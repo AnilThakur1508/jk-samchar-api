@@ -17,11 +17,11 @@ namespace JkSamachar.Controllers
         }
 
         [HttpGet("GetAllJkNews")]
-        public async Task<IActionResult> GetAllJKNews()
+        public async Task<IActionResult> GetAllJKNews([FromQuery] string roleName)
         {
             try
             {
-                var result = await _jKNewsServices.GetAllJKNews();
+                var result = await _jKNewsServices.GetAllJKNews(roleName);
                 if (result == null)
                 {
                     throw new Exception("News not found");

@@ -26,15 +26,12 @@ namespace JKSamachar.Services.Implementation
         {
             try
             {
-                var handler = new JwtSecurityTokenHandler();
-                if (!handler.CanReadToken(token))
+                if (token == null)
                 {
-                    throw new Exception("Invalid token format.");
+                    throw new Exception("You are not login first login then you will can post the news");
                 }
-                var jwtToken = handler.ReadJwtToken(token);
-                var role = jwtToken.Claims.FirstOrDefault(c => c.Type == "role")?.Value;
                 var result = _mapper.Map<JKNews>(jkNewsDto);
-                if(role == "Admin")
+                if(jkNewsDto.Role == "Admin")
                 {
                     result.IsAdminedAllowPublish = true;
                 }
@@ -74,23 +71,42 @@ namespace JKSamachar.Services.Implementation
             }
         }
 
-        public async Task<IEnumerable<JKNewsResponseDto>> GetAllJKNews()
+        public async Task<IEnumerable<JKNewsResponseDto>> GetAllJKNews(string roleName)
         {
             try
             {
-                var result = _unitOfWork.Query<JKNews>().Where(x => !x.IsDeleted).OrderByDescending(x => x.CreatedOn).ToList();
-                if (result != null)
+                IEnumerable<JKNews> result;
+
+                if (roleName == "Admin")
+                {
+                    result = _unitOfWork.Query<JKNews>()
+                        .Where(x => !x.IsDeleted)
+                        .OrderByDescending(x => x.CreatedOn)
+                        .ToList();
+                }
+                else
+                {
+                    result = _unitOfWork.Query<JKNews>()
+                        .Where(x => !x.IsDeleted && x.IsAdminedAllowPublish == true)
+                        .OrderByDescending(x => x.CreatedOn)
+                        .ToList();
+                }
+
+                if (result != null && result.Any())
                 {
                     var jkNewsDto = _mapper.Map<IEnumerable<JKNewsResponseDto>>(result);
                     return jkNewsDto;
                 }
-                throw new Exception("Data not found");
+
+                return Enumerable.Empty<JKNewsResponseDto>();
             }
             catch (Exception ex)
             {
-                throw new Exception(ex.Message);
+                // You can log here if needed
+                throw new Exception("Failed to get news", ex);
             }
         }
+
         public async Task<JKNewsResponseDto> GetJKNewsById(string id)
         {
             try
@@ -118,6 +134,7 @@ namespace JKSamachar.Services.Implementation
                 if (existingData != null)
                 {
                     _mapper.Map(jkNewsDto, existingData);
+                    existingData.IsAdminedAllowPublish = true;
                     _unitOfWork.Update(existingData);
                     _unitOfWork.Commit();
                     return Task.FromResult(true);
