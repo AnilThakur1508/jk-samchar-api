@@ -75,6 +75,7 @@ namespace JkSamachar.Controllers
             {
                 var authHeader = Request.Headers["Authorization"].ToString();
                 var token = authHeader.StartsWith("Bearer ") ? authHeader.Substring(7) : null;
+                
                 var result = await _jKNewsServices.AddJKNews(jkNewsDto, token);
                 if (!result)
                 {
