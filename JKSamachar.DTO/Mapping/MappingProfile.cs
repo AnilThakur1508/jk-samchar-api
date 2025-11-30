@@ -14,6 +14,7 @@ namespace JKSamachar.DTO.Mapping
         {
             CreateMap<JkNewsDto, JKNews>().ReverseMap();
             CreateMap<JKNewsResponseDto, JKNews>().ReverseMap();
+            CreateMap<JKSerachResponseDto, JKNews>().ReverseMap();
         }
     }
 }

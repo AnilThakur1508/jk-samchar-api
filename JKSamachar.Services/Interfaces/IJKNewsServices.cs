@@ -11,6 +11,7 @@ namespace JKSamachar.Services.Interfaces
     {
         Task<bool> AddJKNews(JkNewsDto jkNewsDto, string token);
         Task<IEnumerable<JKNewsResponseDto>> GetAllJKNews(string roleName);
+        Task<IEnumerable<JKSerachResponseDto>> GetAllSearchJKNews(string search);
         Task<JKNewsResponseDto> GetJKNewsById(string id);
         Task<bool> UpdateJKNews(string id, JkNewsDto jkNewsDto);
         Task<bool> DeleteJKNews(string id);

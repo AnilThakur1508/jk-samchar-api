@@ -121,5 +121,23 @@ namespace JkSamachar.Controllers
 
             return Ok(new { fileName = file.FileName, fileUrl = $"/uploads/{file.FileName}" });
         }
+        [HttpGet("Search")]
+        public async Task<IActionResult> GetAllSearchJKNews([FromQuery] string search)
+        {
+            try
+            {
+                var result = await _jKNewsServices.GetAllSearchJKNews(search);
+                if (result == null)
+                {
+                    throw new Exception("Search Record is empty");
+                }
+                return Ok(result);
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = ex.Message });
+            }
+        }
     }
 }

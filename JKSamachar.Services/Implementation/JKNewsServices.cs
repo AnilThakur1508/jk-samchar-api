@@ -9,6 +9,8 @@ using JKSamachar.DAL.Enitity;
 using JKSamachar.DAL.Repository.IRepository;
 using JKSamachar.DTO;
 using JKSamachar.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace JKSamachar.Services.Implementation
 {
@@ -104,6 +106,21 @@ namespace JKSamachar.Services.Implementation
             {
                 // You can log here if needed
                 throw new Exception("Failed to get news", ex);
+            }
+        }
+
+        public async Task<IEnumerable<JKSerachResponseDto>> GetAllSearchJKNews(string search)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(search))
+                    throw new Exception("Query cannot be empty");
+
+                var words = search.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+                var data = await _unitOfWork.Query<JKNews>().Where(doc => words.All(word =>  doc.Title.Contains(word) || doc.Description.Contains(word))).ToListAsync();
+                return _mapper.Map<IEnumerable<JKSerachResponseDto>>(data);
+            } catch (Exception ex) {
+                throw new Exception(ex.Message);
             }
         }
 
