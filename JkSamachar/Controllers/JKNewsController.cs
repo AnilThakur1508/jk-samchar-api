@@ -17,7 +17,7 @@ namespace JkSamachar.Controllers
         }
 
         [HttpGet("GetAllJkNews")]
-        public async Task<IActionResult> GetAllJKNews([FromQuery] string roleName)
+        public async Task<IActionResult> GetAllJKNews([FromQuery] string? roleName)
         {
             try
             {
@@ -35,7 +35,7 @@ namespace JkSamachar.Controllers
         }
 
         [HttpGet("GetJkNewsById")]
-        public async Task<IActionResult> GetJKNewsById([FromQuery] string id) 
+        public async Task<IActionResult> GetJKNewsById([FromQuery] string? id) 
         {
             try
             {
@@ -122,7 +122,7 @@ namespace JkSamachar.Controllers
             return Ok(new { fileName = file.FileName, fileUrl = $"/uploads/{file.FileName}" });
         }
         [HttpGet("Search")]
-        public async Task<IActionResult> GetAllSearchJKNews([FromQuery] string search)
+        public async Task<IActionResult> GetAllSearchJKNews([FromQuery] string? search)
         {
             try
             {
